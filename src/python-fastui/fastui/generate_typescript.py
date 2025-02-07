@@ -8,6 +8,7 @@ from typing import Any, cast
 from pydantic import ImportString, TypeAdapter
 from pydantic.json_schema import GenerateJsonSchema, JsonSchemaValue
 from pydantic_core import core_schema, to_json
+from security import safe_command
 
 
 def main(python_object_str: str, typescript_output_file: Path):  # pragma: no cover
@@ -117,7 +118,7 @@ def json2ts(input_file: Path, output_file: Path):  # pragma: no cover
         '--no-unknownAny',
     )
     try:
-        subprocess.run(args, check=True)
+        safe_command.run(subprocess.run, args, check=True)
     except (subprocess.CalledProcessError, FileNotFoundError) as e:
         raise RuntimeError(
             "Failed to run json2ts, you'll need to install `npx` and `json-schema-to-typescript`, "
